@@ -1,0 +1,124 @@
+---
+title: "Analisis de la actividad fisica"
+author: '"Rosa Idalia Sánchez Hernández"'
+date: "18 de marzo de 2016"
+output: html_document
+---
+
+Introduccion
+
+Con el fin de reducir el riesgo de enfermedades se recomienda la activacion fisica aerobica, de intensidad moderada. Se desea conocer los habitos de una persona que no tiene mucho tiempo para ir al gimnasio, asi que se estudia la cantidad de pasos que da en intervalos de 5 minutos durante dos meses. Despues se desea comparar la esta actividad fisica entre semana y los fines de semana.   
+
+Para cargar los datos que se utilizaron, primero debemos fijar el directorio en donde se encuentran los datos, en este caso se guardaron en la variable activity.
+
+```{r}
+setwd("/Users/rosai/Documents/descargas lunes 14 marzo 2016/R markdown")
+activity=read.csv("activity.csv")
+
+```
+
+En el siguiente cuadro podemos visualizar los datos tal como se registraron, la primer columna muestra el numero de pasos registrados, la segunda columna muestra la fecha en que se tomo la medicion y la tercer columna contiene un identificador del intervalo. 
+```{r}
+print(activity)
+```
+
+
+Procesamiento de los datos
+
+Con la siguiente instruccion se desea conocer as informacion acerca de la cantidad de veces que se repite la fecha, y posterior a eso se observa que el numero de intervalos medidos por dia es el mismo de 288. 
+ Asi se decide reorganizar la informacion en una matriz de 288 filas y 61 columnas , cada columna son las mediciones tomadas en un dia diferente.
+ 
+```{r}
+info=table(activity[,2])  
+pasos=matrix(activity[,1], nrow=288 , ncol = 61, byrow = FALSE)
+
+```
+A continuacion se muestra la matriz con el reacomodo de los datos
+
+```{r}
+print(pasos)
+```
+
+Con los datos ya reacomodados calculamos la media y la mediana de los datos por dia, con las siguientes instrucciones 
+
+```{r}
+media=rep(0,61)
+mediana=rep(0,61)
+for (i in 1:61)
+{media[i]=mean(pasos[,i])
+mediana[i]=median(pasos[,i])}
+print(media)
+print(mediana)
+```
+
+Visualicemos la siguiente gráfica de barras en donde se muestra la media de la cantidad de pasos registrados por cada dia 
+
+```{r, echo=FALSE}
+barplot(media)
+```
+
+Se crearon una lista de los ìndices en que cambia la fecha para manipularlos de forma posterior
+
+```{r}
+dias=(1:61)  
+dias=dias*288;
+```
+
+Con la siguiente instruccion se reconoce el formato de la segunda columna de la matriz activity como fechas y con el comando weekdays se puede obtener el dia de la semana asociado a cada una de las fechas 
+
+```{r}
+today<-as.Date(activity[dias,2])
+dias2=weekdays(today, abbreviate = FALSE)
+```
+
+
+Se crean y se manipulan los siguientes arreglos para guardar las medias correspondientes a los fines de semana y los correspondientes a los dias entre semana 
+
+```{r}
+findesem=rep(0,16)
+entresem=rep(0,45)
+k=1
+j=1
+for (i in 1:61)
+{  if (dias2[i]=="sábado"|| dias2[i]=="domingo")
+  {findesem[k]=media[i]
+  k=k+1}
+  else 
+  {entresem[j]=media[i]
+  j=j+1}
+}
+```
+
+A continuacion se grafican las medias entre semana y en fin de semana
+Medias del fin de semana
+```{r}
+barplot(findesem)
+```
+
+
+Medias de entre semana
+```{r}
+barplot(entresem)
+```
+
+Para comparar las dos poblaciones se crea una prueba t-student con la  finalidad de ver si hay diferencia una diferencia significativa entre la cantidad de pasos que se dan entre semana y en fin de semana con la siguiente intruccion
+
+```{r}
+t.test(entresem,findesem) 
+```
+
+La hipotesis nula es que las dos medias son iguales. Como el p-valor es 0.02 con este p-valor puedes rechazar la hipotesis nula a un 95 % de confianza. Ademas como el intervalo es negativo nos da indices que en fin de semana se camina mas que en fin de
+al hacer la prueba t para ver
+y a un 95 % de confianza nos arroja ... , no incluye el cero podemos concluir que la  
+
+```{r}
+
+```
+```{r}
+
+```
+
+
+
+
+
